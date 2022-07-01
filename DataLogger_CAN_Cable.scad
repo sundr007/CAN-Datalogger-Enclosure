@@ -42,7 +42,7 @@ module Main(){
             DT();
             BatteryCutout();
         }
-        //DTsnapTab();
+        DTsnapTab();
         difference(){
             ends();
             translate([0,0,3])
@@ -56,7 +56,7 @@ module Main(){
 
 
 module lid(){
-    translate([0,xbatt+11.5,-zbatt])
+    translate([0,xbatt+10,-zbatt])
     linear_extrude(zbatt+1)
     difference(){
         polygon([   
@@ -78,7 +78,7 @@ module lid(){
     translate([0,xbatt+1.8,1])
         linear_extrude(2)
         difference(){
-            square([ybatt+6*2,xbatt+2],true);
+            square([ybatt+6*2,xbatt-1],true);
             translate([0,-19,0])
                 circle(d=30);
         }
@@ -88,17 +88,17 @@ module lid(){
 }
 
 module Battery(){
-    translate([0,xbatt/2+9,-zbatt/2])
+    translate([0,xbatt/2+9-2.5,-zbatt/2-1])
         difference(){
             cube([ybatt+3,xbatt-1,zbatt+2],center=true);
             translate([0,0,1.5])
             cube([ybatt,xbatt,zbatt+3],center=true);
         }
         
-    translate([ybatt/2+1.5,xbatt+6.5,-zbatt])
+    translate([ybatt/2+1.5,xbatt+6.5-2.5,-zbatt])
         linear_extrude(zbatt)
             polygon([[-1,2],[2,2],[2,0]]);
-    translate([-ybatt/2-1.5,xbatt+6.5,-zbatt])
+    translate([-ybatt/2-1.5,xbatt+6.5-2.5,-zbatt])
         linear_extrude(zbatt)
             mirror([1,0,0])
                 polygon([[-1,2],[2,2],[2,0]]);
@@ -106,14 +106,14 @@ module Battery(){
 }
 
 module BatteryCutout(){
-    translate([0,xbatt/2+9,-zbatt/2])
+    translate([0,xbatt/2+9-2.5,-zbatt/2-1])
         cube([ybatt,xbatt,zbatt],center=true);
 }
 
 module DTsnapTab(){
     translate([0,-8.75-0.5-3,-xpcb+5+5+1-Ldt])
     linear_extrude(1)
-    square([10,0.2],true);  
+    square([10,0.3],true);  
 }
 
 module ends(){
@@ -151,10 +151,12 @@ module screwtop(){
 }
 
 module bottom(){
+    r = Dia/2;
+thickness = 7;
     h=xpcb-5-5;
     translate([0,0,-xpcb+5+5+1])
+    difference(){
     linear_extrude(h)
-
         difference(){
             circle(d=Dia);
             translate([0,zpcb-7.5+1.5,0])
@@ -162,8 +164,18 @@ module bottom(){
                     square([ypcb,zpcb*3+1],true);
                     circle(r=5,true);
                 }
+
             
         }
+        for (zdist=[2.5:7.5:25]){
+        for (i=[180:30:360]) {
+                rotate([0, 0, i])
+                translate([r-thickness-1, 0, zdist])
+                rotate([0, 90, 0])
+                cylinder(h = thickness+2, r=2);
+        }
+    }
+    }
 
 }
 
